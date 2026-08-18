@@ -1,11 +1,16 @@
-Jonsbo TH-240/360 temperature display on Linux
+* Jonsbo TH-240/360 temperature display on Linux AMD BAZZITE
+* Picked up this project and modified it in order to work on my Bazzite install on a AM4 B550 motherboard using hwmon:k10temp:Tctl sensor info.
+***** I AM NOT A CODER, i got helped by IA.*****
+* I used an * to highlight my changes to the original.
+* ORIGINAL https://github.com/htkhiem/jonsbo-th-linux , kudos to htkhiem
 ---
 
 Minimal, no-UI Linux app to drive the temperature display on [Jonsbo TH-series](https://www.jonsbo.com/en/products/TH-360--.html) AIO water blocks. Basically functionally equivalent to their official Windows app, but for Linux and uses next to no RAM.
 
 ## Disclaimer
 
-**Use this at your own risk.**. While this app only makes use of basic USB HID functionality (and therefore should be relatively safe compared to those having to use SMBus/i2c), there might still be a risk of malfunctioning or complete bricking of your AIO's display, stemming from possible differences between units and/or manufacturing batches. I have tested this on my own TH-360, but that does not necessarily translate to _every single_ Jonsbo TH-series unit sold out there.
+**Use this at your own risk.**.
+* While this app only makes use of basic USB HID functionality (and therefore should be relatively safe compared to those having to use SMBus/i2c), there might still be a risk of malfunctioning or complete bricking of your AIO's display, stemming from possible differences between units and/or manufacturing batches. I have tested this on my own TH-240, but that does not necessarily translate to _every single_ Jonsbo TH-series unit sold out there.
 
 As with GPLv3, this software is provided without warranty. The software author or license can not be held liable for any damages inflicted by the software.
 
@@ -27,30 +32,36 @@ As with GPLv3, this software is provided without warranty. The software author o
     ``` sh
     rustup default stable
     ```
+
+
+* 3. Install required libraries for rust
+    ``` sh
+    sudo rpm-ostree install systemd-devel
+    ```
     
-3. Clone & compile:
+* 4. Clone & compile:
 
     ``` sh
-    git clone https://github.com/htkhiem/jonsbo-th-linux.git
+    git clone https://github.com/mycursedsoul/jonsbo-th-linux-AMD.git
     cd jonsbo-th-linux
     cargo build --release
     ```
     
-4. Install & register with `systemd` to run it on startup.
+* 5. Install & register with `systemd` to run it on startup.
 
     ```sh
     chmod a+x install.sh
-    sudo ./install.sh
+    ./install.sh
     ```
-    The display on the water block should now light up & display your CPU temperature, updated twice every second. **The display only has two digits & can only indicate up to 99°C.** Please be mindful of your fan profiles (not set via this app) and don't put yourself in an Anatoly Dyatlov situation.
+*   The display on the water block should now light up & display your CPU temperature, updated in 250ms, it's the slowest number it can do without artifacting. **The display only has two digits & can only indicate up to 99°C.** Please be mindful of your fan profiles (not set via this app) and don't put yourself in an Anatoly Dyatlov situation.
     
-    The above script installs for all users & requires `sudo` by default, but you can always modify the script to install into your user's folders like `~/bin/` and `~/.config/systemd/user/`, provided you have set up your `$PATH` accordingly.
+    The above script installs for all users by default, but you can always modify the script to install into your user's folders like `~/bin/` and `~/.config/systemd/user/`, provided you have set up your `$PATH` accordingly.
     
 ## Uninstallation
 
     ```sh
     chmod a+x install.sh
-    sudo ./install.sh --uninstall
+    ./install.sh --uninstall
     ```
 
 ## Manual start/stop
@@ -68,50 +79,5 @@ The above installation script will set up a `systemd` service named `jonsbo` tha
     systemctl enable --now jonsbo
     ```
 
-## What this thing does
 
-1. Look for a thermal zone in `/sys/class/thermal` that's most likely the CPU package temperature sensor. By default we look for the first zone with type `x86_pkg_temp`. Read its temperature.
-2. Look for the AIO display device itself, which is connected via an internal USB2 header. By default we're looking for one with PID:VID `5131:2007`. Different production batches may piggyback on different ICs and thus may have different IDs (and protocols, too). This app is only meant to work with `5131:2007`.
-3. Ping said device with the acquired temperature. As with most HIDs it expects 64-byte packets, with 
-   - The first two bytes being `0x01` and `0x02`, and
-   - The **fourth** byte being the value to display.
-   
-   Other bytes didn't seem to do anything so they're set to zeros.
-4. Sleep for half a second then repeat step 3. Steps 1 & 2 are not looped as there is no need to.
-
-## FAQs
-
-- **Q:** I don't see any such device in my `lsusb`/I know that particular device is my AIO display, but it has a different VID:PID. Can I use this app?
-
-  **A:** Most probably NO. However, if you are pretty sure you have a TH-360/240 on hand with the exact same water block as seen on their website, you can try modifying `jonsbo.service` with your PID:VID. For example, if your device shows up with ID "1234:5678", edit the `ExecStart` line as follows:
-  
-  ```sh
-  ExecStart=/usr/local/bin/jonsbo_th 1234:5678 x86_pkg_temp  # First parameter is the USB VID:PID to send data to. SETTING THIS TO AN INCOMPATIBLE DEVICE MAY DAMAGE IT. YOU HAVE BEEN WARNED.
-  ```
-
-- **Q:** How do I customise the temperature source?
-
-  **A:** We make use of the `type` string in each thermal zone to settle on which to display. 
-  
-  First, list your current ones by running `cat /sys/class/thermal/*/type`. You might see something like this:
-  
-  ```sh
-  $ cat /sys/class/thermal/*/type
-  TFN1
-  Fan
-  x86_pkg_temp
-  Processor
-  Processor
-  ...
-  ```
-  
-  There might be duplicate values too (for example you may have one `Processor` for every CPU core). Only the first one with a given type is selected, so pinning to a specific CPU core isn't possible.
-  
-  Now, pick one of those values and edit them into the `ExecStart` line of `jonsbo.service`. For example with `TFN1`:
-  
-  ```sh
-  ExecStart=/usr/local/bin/jonsbo_th 5131:2007 TFN1   # Second parameter determines what zone type to look for
-  ```
-  
-- **Q:** Why Rust?
-  **A:** I just like Rust.
+****
