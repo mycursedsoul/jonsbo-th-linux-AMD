@@ -29,7 +29,7 @@ As with GPLv3, this software is provided without warranty. The software author o
 2. As a prerequisite, ensure you have a Rust toolchain installed:
 
     ``` sh
-    rustup default stable
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     ```
 
 
