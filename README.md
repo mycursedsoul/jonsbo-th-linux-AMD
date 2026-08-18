@@ -1,7 +1,6 @@
 * Jonsbo TH-240/360 temperature display on Linux AMD BAZZITE
 * Picked up this project and modified it in order to work on my Bazzite install on a AM4 B550 motherboard using hwmon:k10temp:Tctl sensor info.
 ***** I AM NOT A CODER, i got helped by IA.*****
-* I used an * to highlight my changes to the original.
 * ORIGINAL https://github.com/htkhiem/jonsbo-th-linux , kudos to htkhiem
 ---
 
@@ -34,12 +33,12 @@ As with GPLv3, this software is provided without warranty. The software author o
     ```
 
 
-* 3. Install required libraries for rust
+3. Install required libraries for rust
     ``` sh
     sudo rpm-ostree install systemd-devel
     ```
     
-* 4. Clone & compile:
+4. Clone & compile:
 
     ``` sh
     git clone https://github.com/mycursedsoul/jonsbo-th-linux-AMD.git
@@ -47,7 +46,7 @@ As with GPLv3, this software is provided without warranty. The software author o
     cargo build --release
     ```
     
-* 5. Install & register with `systemd` to run it on startup.
+5. Install & register with `systemd` to run it on startup.
 
     ```sh
     chmod a+x install.sh
