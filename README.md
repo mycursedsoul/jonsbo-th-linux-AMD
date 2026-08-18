@@ -52,7 +52,7 @@ As with GPLv3, this software is provided without warranty. The software author o
     chmod a+x install.sh
     ./install.sh
     ```
-*   The display on the water block should now light up & display your CPU temperature, updated in 250ms, it's the slowest number it can do without artifacting. **The display only has two digits & can only indicate up to 99°C.** Please be mindful of your fan profiles (not set via this app) and don't put yourself in an Anatoly Dyatlov situation.
+*   The display on the water block should now light up & display your CPU temperature, updated in 250ms, it's the slowest number it can do without artifacting. **The display only has two digits & can only indicate up to 99°C.** Please be mindful this ONLY CONTROLS THE DISPLAY, NOT THE FAN OR PUMP PROFILES!!!
     
     The above script installs for all users by default, but you can always modify the script to install into your user's folders like `~/bin/` and `~/.config/systemd/user/`, provided you have set up your `$PATH` accordingly.
     
