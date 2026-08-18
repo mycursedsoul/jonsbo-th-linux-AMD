@@ -4,7 +4,7 @@
 * ORIGINAL https://github.com/htkhiem/jonsbo-th-linux , kudos to htkhiem
 ---
 
-Minimal, no-UI Linux app to drive the temperature display on [Jonsbo TH-series](https://www.jonsbo.com/en/products/TH-360--.html) AIO water blocks. Basically functionally equivalent to their official Windows app, but for Linux and uses next to no RAM.
+Minimal, no-UI Linux app to drive the temperature display on [Jonsbo TH-series](https://www.jonsbo.com/en/products/TH-360--.html) AIO water blocks. Basically functionally equivalent to their official Windows app, but for Linux and uses about 1MB of RAM only.
 
 ## Disclaimer
 
